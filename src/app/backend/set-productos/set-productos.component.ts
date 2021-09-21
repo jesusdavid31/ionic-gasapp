@@ -3,6 +3,8 @@ import { AlertController, LoadingController, MenuController, ToastController } f
 import { FirestoreService } from '../../services/firestore.service';
 import { Producto } from '../../models/models';
 
+import { FirestorageService } from '../../services/firestorage.service';
+
 @Component({
   selector: 'app-set-productos',
   templateUrl: './set-productos.component.html',
@@ -29,7 +31,8 @@ export class SetProductosComponent implements OnInit {
     public firestoreService: FirestoreService,
     public loadingController: LoadingController,
     public toastController: ToastController,
-    public alertController: AlertController,  
+    public alertController: AlertController, 
+    public firestorageService: FirestorageService 
   ) { }
 
   ngOnInit() {
@@ -42,12 +45,12 @@ export class SetProductosComponent implements OnInit {
 
   async guardarProducto() {
     this.presentLoading();
-    // const path = 'Productos';
-    // const name = this.newProducto.nombre;
-    // if (this.newFile !== undefined) {
-    //   const res = await this.firestorageService.uploadImage(this.newFile, path, name);
-    //   this.newProducto.foto = res;
-    // }
+    const path = 'Productos';
+    const name = this.newProducto.nombre;
+    if (this.newFile !== undefined) {
+      const res = await this.firestorageService.uploadImage(this.newFile, path, name);
+      this.newProducto.foto = res;
+    }
     this.firestoreService.createDoc(this.newProducto, this.path, this.newProducto.id).then( res => {
          this.loading.dismiss();
          this.presentToast('Producto guardado con éxito');
@@ -123,5 +126,18 @@ export class SetProductosComponent implements OnInit {
     });
     toast.present();
   }
+
+  async newImageUpload(event: any) {
+    if (event.target.files && event.target.files[0]) {
+        this.newFile = event.target.files[0];
+        //FileReader es una biblioteca que permite leer archivos
+        //Hacemos una instancia de la clase con new File Reader
+        const reader = new FileReader();
+        reader.onload = ((image) => {
+            this.newProducto.foto = image.target.result as string;
+        });
+        reader.readAsDataURL(event.target.files[0]);
+      }
+}
 
 }

@@ -51,14 +51,17 @@
             <ion-label class="normal">Foto: </ion-label>
             <ion-buttons slot="end">
                 <ion-button>
-                    <ion-icon slot="icon-only" name="images"></ion-icon>
+                    <label for="file-upload">
+                        <ion-icon slot="icon-only" name="images"></ion-icon>
+                    </label>
+                    <input (change)="newImageUpload($event)" type="file" id="file-upload" style="display: none;" accept="images/*">
                 </ion-button>
             </ion-buttons>
         </ion-item>
 
-        <ion-button style="margin: 30px;" expand="full" color="primary" shape="round" (click)="guardarProducto()">
-            Guardar
-        </ion-button>
+        <ion-item class="mt-3">
+            <img class="image" [src]="newProducto.foto">
+        </ion-item>
     </div>
 
     <h3 class="subtitulo encabezado">Lista de Productos</h3>

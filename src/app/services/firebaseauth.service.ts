@@ -50,6 +50,7 @@ export class FirebaseauthService {
     }
  }
 
+ //El stateAuth es el estado de autenticación del usuario, esto ya es un metodo propio de firebase listo para su uso
  stateAuth() {
     return this.auth.authState;
  }

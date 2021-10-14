@@ -38,7 +38,17 @@ export class PerfilComponent implements OnInit {
     public firestoreService: FirestoreService,
     public firestorageService: FirestorageService,
     private modalController: ModalController
-  ) { }
+  ) {
+    this.firebaseauthService.stateAuth().subscribe( res => {
+      console.log(res);
+      if (res !== null) {
+        this.uid = res.uid;
+        this.getUserInfo(this.uid);
+      } else {
+        this.initCliente();
+      }
+    });
+  }
 
   async ngOnInit() {
     const uid = await this.firebaseauthService.getUid();
@@ -107,15 +117,15 @@ async registrarse() {
     this.suscriberUserInfo.unsubscribe();
  }
 
-//  getUserInfo(uid: string) {
-//      console.log('getUserInfo');
-//      const path = 'Clientes';
-//      this.suscriberUserInfo = this.firestoreService.getDoc<Cliente>(path, uid).subscribe( res => {
-//             if (res !== undefined) {
-//               this.cliente = res;
-//             }
-//      });
-//  }
+ //Obtenemos la información completa del usuario
+ getUserInfo(uid: string) {
+     const path = 'Clientes';
+     this.suscriberUserInfo = this.firestoreService.getDoc<Cliente>(path, uid).subscribe( res => {
+            if (res !== undefined) {
+              this.cliente = res;
+            }
+     });
+ }
 
  ingresar() {
     const credenciales = {

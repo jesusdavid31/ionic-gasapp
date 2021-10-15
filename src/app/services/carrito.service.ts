@@ -110,11 +110,19 @@ export class CarritoService {
      } else {
           //Aqui entra si no estamos logueados, nos lleva al perfil 
           this.router.navigate(['/perfil']);
+          //Se pone un return para que no haga el codigo que esta abajo y se salga de esta función
           return;
      }
      this.pedido$.next(this.pedido);
      console.log('en add pedido -> ', this.pedido);
+     //Creamos la ruta donde se va guardar esta colección
+     //La colección la guardamos dentro de la misma colección de clientes, es decir dentro del documento de un cliente
+     //cogemos su id, lo buscamos y lo guardamos alli creando una nueva colección dentro de ese mismo documento, es decir seria como una
+     //subcoleccion dentro de esa colección principal
      const path = 'Clientes/' + this.uid + '/' + this.path;
+     //El this.uid es el mismo id del usuario
+     //Como no necesitamos recibir nada en esta promesa que también puede ser un await, es decir, no vamos a hacer nada con la
+     //respuesta, le ponemos los parentesis vacios y ya y solo ponemos el console.log
      this.firestoreService.createDoc(this.pedido, path, this.uid).then( () => {
           console.log('añdido con exito');
      });

@@ -23,10 +23,12 @@ export class CarritoService {
               public firestoreService: FirestoreService,
               public router: Router) {
 
+    //Esto es para verificar si el usuario esta autenticado o no
     //   console.log('CarritoService inicio');
       this.initCarrito();
       this.firebaseauthService.stateAuth().subscribe( res => {
             // console.log(res);
+            //Si la respuesta es diferente de null es porque esta autenticado
             if (res !== null) {
                   this.uid = res.uid;
                   this.loadCLiente();
@@ -35,6 +37,7 @@ export class CarritoService {
    }
 
   loadCarrito() {
+      //Esta ruta es donde se va guardar el pedido agregado al carrito
       const path = 'Clientes/' + this.uid + '/' + 'carrito';
       if (this.carritoSuscriber) {
         this.carritoSuscriber.unsubscribe();
@@ -52,6 +55,7 @@ export class CarritoService {
   }
 
   initCarrito() {
+      //Inicializamos el pedido
       this.pedido = {
           id: this.uid,
           cliente: this.cliente,
@@ -84,12 +88,19 @@ export class CarritoService {
   addProducto(producto: Producto) {
      console.log('addProducto ->', this.uid);
      if (this.uid.length) {
+        //Aqui buscamos con el fin si existe un id igual al producto.id que se esta pasando por parametro
+        //Lo buscamos en el array de productos que esta en this.pedido, el find devuelve el primer valor del arreglo que coincida con la busqueda
         const item = this.pedido.productos.find( productoPedido => {
             return (productoPedido.producto.id === producto.id)
         });
+        //Si el find de arriba no encuentra nada devuelve un undefined, por lo tanto hacemos la condición de que si es diferente de
+        //undefined es porque si encontro algo, por lo tanto como ya existe ese producto en el arreglo no lo agregamos de nuevo como tal
+        //sino que a la cantidad le sumamos para indicar que quieres un producto mas de ese mismo producto 
         if (item !== undefined) {
             item.cantidad ++;
         } else {
+           //Sino es porque no encontro nada en el arreglo y alli si puedes hacer un push a ese array
+           //el producto solo, es porque recuerda que si pones producto: producto es lo mismo que producto solo ya que tienen el mismo nombre
            const add: ProductoPedido = {
               cantidad: 1,
               producto,
@@ -97,6 +108,7 @@ export class CarritoService {
            this.pedido.productos.push(add);
         }
      } else {
+          //Aqui entra si no estamos logueados, nos lleva al perfil 
           this.router.navigate(['/perfil']);
           return;
      }

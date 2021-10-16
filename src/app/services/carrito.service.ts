@@ -11,6 +11,10 @@ import { FirestoreService } from './firestore.service';
 export class CarritoService {
 
   private pedido: Pedido;
+  //Esto es para observar todos los cambios que pasen en pedido, por eso se coloca el $, es decir, esto es un observable de ese
+  //sujeto pedido, recuerda el ejemplo de instagram donde nos suscribimos a un sujeto y somos notificados de cualquier cosa que haga ese
+  //sujeto al que seguimos, por lo tanto al ser notificados reaccionamos o hacemos cualquier cosa a ese sujeto
+  //NOTA: Este es un sujeto de tipo pedido
   pedido$ = new Subject<Pedido>();
   path = 'carrito/';
   uid = '';
@@ -46,6 +50,9 @@ export class CarritoService {
             //   console.log(res);
               if (res) {
                     this.pedido = res;
+                    //Aqui si se detecta algun cambio, es decir, como en instagram por ejemplo si un famoso hizo algo como publicar algo
+                    //eso es un cambio y emitimos algo con el next
+                    //Aqui siempre hay que emitit algo, en este caso este sujeto emiti siempre cosas que son de tipo pedido
                     this.pedido$.next(this.pedido);
               } else {
                   this.initCarrito();
@@ -65,6 +72,7 @@ export class CarritoService {
           fecha: new Date(),
           valoracion: null,
       };
+      //Aqui ponemos de nuevo el next porque aqui se genero un cambio en el this.pedido
       this.pedido$.next(this.pedido);
   }
 

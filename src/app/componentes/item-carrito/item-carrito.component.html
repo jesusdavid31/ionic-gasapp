@@ -7,6 +7,7 @@
             </ion-col>
             <ion-col size="8">
                 <ion-item>
+                    <!-- El ion-text-wrap es para que si el texto no cabe en una linea se hecha para abajo y no salen los ... esos -->
                     <ion-label class="subtitulo ion-text-wrap">{{productoPedido.producto.nombre}}</ion-label>
                     <ion-buttons slot="end" *ngIf="botones">
                         <ion-button (click)="addCarrito()" class="icon-add">
